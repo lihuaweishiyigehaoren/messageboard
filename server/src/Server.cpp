@@ -5,11 +5,16 @@
 */
 #include "Server.h"
 
-Server::Server(std::string& host,uint16_t port) :
+Server::Server(const std::string& host,uint16_t port) :
     _host(host),_port(port)
 {
 }
 
 Server::~Server()
 {
+}
+
+void Server::start()
+{
+    
 }

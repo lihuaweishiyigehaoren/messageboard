@@ -9,7 +9,7 @@ class Server
 public:
     
     // &-如果不传引用进来字符串可能会被复制两次.划不来
-    Server(std::string& host,uint16_t port);
+    Server(const std::string& host,uint16_t port);
     ~Server();
 
     void set_host(std::string host)
@@ -21,6 +21,8 @@ public:
     {
         _port = port;
     }
+
+    void start();
 
     
 private:
