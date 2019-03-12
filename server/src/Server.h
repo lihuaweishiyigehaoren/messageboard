@@ -3,6 +3,7 @@
 
 using namespace std;
 #include <string>
+#include "TcpServerInit.h"
 
 class Server
 {
@@ -28,5 +29,6 @@ public:
 private:
     std::string _host;
     uint16_t _port;
+    TcpServerInit _tcpServer;
 };
 

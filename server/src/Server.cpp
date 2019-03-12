@@ -16,5 +16,5 @@ Server::~Server()
 
 void Server::start()
 {
-    
+    _tcpServer.Listen(_host,_port);
 }

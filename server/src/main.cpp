@@ -12,6 +12,7 @@ int main(){
 
     // cout<<"欢迎您进入网络编程之旅"<<endl;
     Server server("127.0.0.1",8000);
+    server.start();
 
     return 0;
 }
