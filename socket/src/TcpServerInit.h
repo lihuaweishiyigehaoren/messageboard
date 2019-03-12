@@ -1,16 +1,15 @@
-#include <sys/socket.h>
-#include "Socket.h"
 #include <string>
 #include <iostream>
+#include <memory>
+#include "TcpConnection.h"
 using namespace std;
-class TcpServerInit : Socket
+class TcpServerInit : public Socket
 {
 public:
     TcpServerInit();
-    ~TcpServerInit();
-
+    virtual ~TcpServerInit();
     void Listen(const std::string& host,uint16_t port, int backlog=0);
-    // std::shared_ptr<> Accept();
+    std::shared_ptr<TcpConnection> Accept();
 
 private:
     std::string _host;

@@ -30,5 +30,6 @@ private:
     std::string _host;
     uint16_t _port;
     TcpServerInit _tcpServer;
+    bool _toExit;
 };
 

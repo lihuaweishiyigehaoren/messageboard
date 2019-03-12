@@ -3,8 +3,9 @@
 *Date: 2019.03.01
 *FileDesc: a main Function of sever
 */
-#include "TcpServerInit.h"
+#include <sys/socket.h>
 #include <cstring>
+#include "TcpServerInit.h"
 
 
 TcpServerInit::TcpServerInit() : Socket(socket(AF_INET,SOCK_STREAM,0))
@@ -26,20 +27,32 @@ void TcpServerInit::Listen(const std::string& host,uint16_t port, int backlog)
     _port = port;
 
     Socket::NativeAddress serverAddress;
-    memset(&serverAddress,0,sizeof(serverAddress));
+    memset(&serverAddress, 0, sizeof(serverAddress));  
 
-    serverAddress.sin_family=AF_INET;
+    serverAddress.sin_family = AF_INET;  
     serverAddress.sin_addr.s_addr = inet_addr(_host.c_str());  
     serverAddress.sin_port = htons(_port);  
 
-    if(bind(_socket,(struct sockaddr *)&serverAddress,sizeof(serverAddress))==-1)
-    {
-        cout<<"server bind socket failed"<<endl;
+    int err = bind(_socket, (struct sockaddr *)&serverAddress, sizeof(serverAddress));  
+    if ( err == -1 ) {
+        cout<<"server bind failed"<<endl;
     }
 
-    if(listen(_socket,backlog)==-1)
-    {
-        cout<<"server listen socket failed"<<endl;
+    err = listen(_socket, backlog);  
+    if ( err == -1 ) {
+        cout<<"server listen failed"<<endl;
     }
+}
 
+std::shared_ptr<TcpConnection> TcpServerInit::Accept()
+{
+    Socket::NativeAddress clientAddress;
+    socklen_t addressLength = sizeof(clientAddress);
+    Socket::NativeSocket clientFd = accept(_socket,(struct sockaddr *)& clientAddress,&addressLength);
+
+    // 这里make_shared就是取代new的方法,帮助我们构造对象并放到智能指针中
+    std::shared_ptr<TcpConnection> conn = std::make_shared<TcpConnection>(clientFd);
+    conn->SetAddress(clientAddress);
+
+    return conn;
 }
