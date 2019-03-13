@@ -52,6 +52,7 @@ std::shared_ptr<TcpConnection> TcpServerInit::Accept()
 
     // 这里make_shared就是取代new的方法,帮助我们构造对象并放到智能指针中
     std::shared_ptr<TcpConnection> conn = std::make_shared<TcpConnection>(clientFd);
+
     conn->SetAddress(clientAddress);
 
     return conn;

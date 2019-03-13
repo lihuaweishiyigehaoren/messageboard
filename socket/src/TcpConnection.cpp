@@ -17,12 +17,12 @@ TcpConnection::~TcpConnection()
 
 const std::string& TcpConnection::GegtHost() const
 {
-    return "li";
+    return _host;
 }
 
 uint16_t TcpConnection::GetPort() const
 {
-    return 1;
+    return _port;
 }
 
 void TcpConnection::SetAddress(const Socket::NativeAddress& address)
