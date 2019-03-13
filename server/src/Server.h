@@ -4,6 +4,7 @@
 using namespace std;
 #include <string>
 #include "TcpServerInit.h"
+#include "Message.h"
 
 class Server
 {
@@ -24,6 +25,13 @@ public:
     }
 
     void start();
+
+private:
+    Message OnPost(const Message& message);
+    Message OnGet(const Message& message);
+    void ShutDown();
+    void InvalidMessage(int type);
+
 
     
 private:

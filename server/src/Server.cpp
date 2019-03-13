@@ -6,6 +6,7 @@
 #include "Server.h"
 #include "SocketException.h"
 
+
 Server::Server(const std::string& host,uint16_t port) :
     _host(host),_port(port),_toExit(false)
 {
@@ -22,14 +23,76 @@ void Server::start()
         _tcpServer.Listen(_host,_port);
         cout<<"Server is listening on :"<<_host<<":"<<_port<<endl;
 
-        while(!_toExit){
+        // 不断的获取客户端连接请求
+        while(!_toExit)
+        {
             std::shared_ptr<TcpConnection> conn = _tcpServer.Accept();
             cout<<"accept cliengt from:"<<conn->GegtHost()<<":"<<conn->GetPort()<<endl;
+        
+            // 一直等待客户端发送命令
+            bool clientAlived = true;
+            while(clientAlived)
+            {
+                Message message;
+                message.Read(conn.get());
+
+                int messageType = message.GetType();
+                switch ( messageType ) {
+                case Message::Type::Invalid:
+                    InvalidMessage(messageType);
+                    clientAlived = false;
+                    break;
+                case Message::Type::ShutdownRequest:
+                    ShutDown();
+                    clientAlived = false;
+                    break;
+                case Message::Type::PostRequest: {
+                    Message response = OnPost(message);
+                    response.Write(conn.get());
+
+                    break;
+                }
+                case Message::Type::GetRequest: {
+                    Message response = OnGet(message);
+                    response.Write(conn.get());
+
+                    break;
+                }
+                default:
+                    InvalidMessage(messageType);
+                    clientAlived = false;
+                    break;
+                }
+            }
+
+            cout<<"client disconnected:"<<conn->GegtHost()<<":"<<conn->GetPort()<<endl; 
         }
     }
     catch(const SocketException& e)
     {
         std::cerr << e.what() <<endl;
     }
+
+}
+
+Message Server::OnPost(const Message& message)
+{
+    cout<<"post"<<endl;
+
+    Message response;
+    response.SetType(Message::Type::PostResponse);
+
+    
+}
+Message Server::OnGet(const Message& message)
+{
+    
+}
+void Server::ShutDown()
+{
+
+}
+void Server::InvalidMessage(int type)
+{
 
 }
