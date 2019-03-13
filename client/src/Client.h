@@ -9,6 +9,14 @@ public:
     void start();
 
 private:
+    void Exit();
+    void DoShutDown();
+    void DoPost();
+    void DoGet();
+    void InvalidCommand(int type);
+    void InvalidCommand(const std::string & commandName);
+
+private:
     TcpClientInit _tcpClient;
     std::string _host;
     uint16_t _port;
