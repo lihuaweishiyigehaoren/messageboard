@@ -1,3 +1,4 @@
 server/build
 socket/build
+client/build
 .vscode/
