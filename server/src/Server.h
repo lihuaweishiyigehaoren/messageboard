@@ -5,6 +5,7 @@ using namespace std;
 #include <string>
 #include "TcpServerInit.h"
 #include "Message.h"
+#include "PostMessage.h"
 
 class Server
 {
@@ -39,5 +40,7 @@ private:
     uint16_t _port;
     TcpServerInit _tcpServer;
     bool _toExit;
+
+    std::vector<PostMessage> _postmessages;
 };
 

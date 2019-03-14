@@ -5,7 +5,6 @@
 */
 #include "Server.h"
 #include "SocketException.h"
-#include "PostMessage.h"
 
 
 Server::Server(const std::string& host,uint16_t port) :
@@ -91,6 +90,9 @@ Message Server::OnPost(const Message& message)
 
         return response;
     }
+
+    _postmessages.push_back(newPost);
+    response.SetContent("ok");
 
     return response;
 
