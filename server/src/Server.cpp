@@ -101,7 +101,21 @@ Message Server::OnPost(const Message& message)
 
 Message Server::OnGet(const Message& message)
 {
-    
+    cout<<"get"<<endl;
+
+    Message response;
+    response.SetType(Message::Type::GetResponse);
+
+    if(!_postmessages.size())
+    {
+        return response;
+    }
+
+    PostMessage latesPost = _postmessages.back();
+    response.SetContent(latesPost.ToMessage());
+    cout<<latesPost.ToMessage();
+
+    return response;
 }
 
 void Server::ShutDown()

@@ -46,6 +46,10 @@ void Client::start()
             {
                 DoPost();
             }
+            else if(commandName == "get")
+            {
+                DoGet();
+            }
             
         }
         
@@ -91,6 +95,35 @@ void Client::DoPost()
 
 void Client::DoGet()
 {
+    Message message;
+    message.SetType(Message::Type::GetRequest);
+    message.Write(&_tcpClient);
+
+    Message response;
+    response.Read(&_tcpClient);
+
+    if(response.GetType() != Message::Type::GetResponse)
+    {
+        InvalidCommand(response.GetType());
+    }
+
+    cout<<"got latest post"<<endl;
+    string responseContent = response.GetContent();
+    if(responseContent.empty())
+    {
+        std::cerr<<"there is no any posts now"<<endl;
+        return;
+    }
+
+    PostMessage latestPost = PostMessage::FromMessage(responseContent);
+    if(!latestPost.isVaild())
+    {
+        std::cerr<<"Response format of GET is invalid"<<endl;
+        return;
+    }
+
+    cout<<"Title :"<<latestPost.GetTitle()<<endl;
+    cout<<"Content:"<<latestPost.GetContent()<<endl;
 
 }
 
