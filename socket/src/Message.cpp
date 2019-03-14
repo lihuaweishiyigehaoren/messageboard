@@ -4,6 +4,8 @@
 *FileDesc: message class
 */
 #include "Message.h"
+#include <iostream>
+using namespace std;
 
 Message::Message() :
     _version(1),_type(Message::Type::Invalid)
@@ -47,6 +49,7 @@ void  Message::Read(TcpStream *stream)
     stream->Read(&_type,sizeof(_type));
     stream->Read(&size,sizeof(size));
 
+
     if(size)
     {
         char * buffer = new char[size];
@@ -66,7 +69,12 @@ void  Message::Write(TcpStream *stream)
     stream->Write(&_type, sizeof(_type));
     stream->Write(&size, sizeof(size));
 
-    if ( size ) {
+    // cout<<size<<endl;
+
+    if ( size ) 
+    {
         stream->Write(_content.c_str(), size * sizeof(char));
     }
+
+    // cout<<_content.c_str()<<endl;
 }

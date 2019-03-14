@@ -6,6 +6,7 @@
 #include "Client.h"
 #include "SocketException.h"
 #include "Message.h"
+#include "PostMessage.h"
 #include <iostream>
 using namespace std;
 
@@ -37,6 +38,15 @@ void Client::start()
                 DoShutDown();
                 Exit();
             }
+            else if(commandName == "exit")
+            {
+                Exit();
+            }
+            else if(commandName == "post")
+            {
+                DoPost();
+            }
+            
         }
         
     }
@@ -63,7 +73,20 @@ void Client::DoShutDown()
 
 void Client::DoPost()
 {
+    cout<<"title?:";
+    string title;
+    getline(cin,title);
 
+    cout<<"Content?:";
+    string content;
+    getline(cin,content);
+
+    PostMessage newPost(title,content);
+    Message message;
+    message.SetType(Message::Type::PostRequest);
+    message.SetContent(newPost.ToMessage());
+
+    message.Write(&_tcpClient);// 投递消息到服务器
 }
 
 void Client::DoGet()

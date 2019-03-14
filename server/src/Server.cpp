@@ -5,6 +5,7 @@
 */
 #include "Server.h"
 #include "SocketException.h"
+#include "PostMessage.h"
 
 
 Server::Server(const std::string& host,uint16_t port) :
@@ -82,16 +83,31 @@ Message Server::OnPost(const Message& message)
     Message response;
     response.SetType(Message::Type::PostResponse);
 
+    PostMessage newPost = PostMessage::FromMessage(message.GetContent());
+    if(!newPost.isVaild())
+    {
+        std::cerr<<"the format of new post is invalid"<<endl;
+        response.SetContent("error");
+
+        return response;
+    }
+
+    return response;
+
     
 }
+
 Message Server::OnGet(const Message& message)
 {
     
 }
+
 void Server::ShutDown()
 {
-
+    cout<<"shut down server by client"<<endl;
+    _toExit = true;
 }
+
 void Server::InvalidMessage(int type)
 {
 
