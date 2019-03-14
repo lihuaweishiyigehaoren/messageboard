@@ -129,10 +129,10 @@ void Client::DoGet()
 
 void Client::InvalidCommand(int type)
 {
-
+    std::cerr<<"Command"<<type<<"is invalid"<<endl;
 }
 
 void Client::InvalidCommand(const std::string & commandName)
 {
-
+    std::cerr<<"Command"<<commandName<<"is invalid"<<endl;
 }

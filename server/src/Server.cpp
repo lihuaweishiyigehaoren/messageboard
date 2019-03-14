@@ -126,5 +126,5 @@ void Server::ShutDown()
 
 void Server::InvalidMessage(int type)
 {
-
+    cout<<"command"<<type<<"is invalid"<<endl;
 }
