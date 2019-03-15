@@ -33,6 +33,8 @@ private:
     void ShutDown();
     void InvalidMessage(int type);
 
+    void ProcessClientRequ(TcpConnection * conn);
+
 
     
 private:
@@ -42,5 +44,9 @@ private:
     bool _toExit;
 
     std::vector<PostMessage> _postmessages;
+
+    // 存放连接的客户端
+    std::vector<shared_ptr<TcpConnection>> _clientConns;
+
 };
 

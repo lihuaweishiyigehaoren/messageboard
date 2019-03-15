@@ -10,10 +10,12 @@
 Server::Server(const std::string& host,uint16_t port) :
     _host(host),_port(port),_toExit(false)
 {
+
 }
 
 Server::~Server()
 {
+
 }
 
 void Server::start()
@@ -29,42 +31,12 @@ void Server::start()
             std::shared_ptr<TcpConnection> conn = _tcpServer.Accept();
             cout<<"accept client from:"<<conn->GegtHost()<<":"<<conn->GetPort()<<endl;
 
-            
-            // 一直等待客户端发送命令
-            bool clientAlived = true;
-            while(clientAlived)
+            _clientConns.push_back(conn);
+            for(shared_ptr<TcpConnection> conn : _clientConns)
             {
-                Message message;
-                message.Read(conn.get());
-
-                int messageType = message.GetType();
-                switch ( messageType ) {
-                case Message::Type::Invalid:
-                    InvalidMessage(messageType);
-                    clientAlived = false;
-                    break;
-                case Message::Type::ShutdownRequest:
-                    ShutDown();
-                    clientAlived = false;
-                    break;
-                case Message::Type::PostRequest: {
-                    Message response = OnPost(message);
-                    response.Write(conn.get());
-                    break;
-                }
-                case Message::Type::GetRequest: {
-                    Message response = OnGet(message);
-                    response.Write(conn.get());
-                    break;
-                }
-                default:
-                    InvalidMessage(messageType);
-                    clientAlived = false;
-                    break;
-                }
+                ProcessClientRequ(conn.get());
             }
-
-            cout<<"client disconnected:"<<conn->GegtHost()<<":"<<conn->GetPort()<<endl; 
+            cout<<_toExit;
         }
     }
     catch(const SocketException& e)
@@ -126,4 +98,41 @@ void Server::ShutDown()
 void Server::InvalidMessage(int type)
 {
     cout<<"command"<<type<<"is invalid"<<endl;
+}
+
+void Server::ProcessClientRequ(TcpConnection * conn)
+{
+    // 一直等待客户端发送命令
+    bool clientAlived = true;
+    while(clientAlived)
+    {
+        Message message;
+        message.Read(conn);
+        int messageType = message.GetType();
+        switch ( messageType ) {
+        case Message::Type::Invalid:
+            InvalidMessage(messageType);
+            clientAlived = false;
+            break;
+        case Message::Type::ShutdownRequest:
+            ShutDown();
+            clientAlived = false;
+            break;
+        case Message::Type::PostRequest: {
+            Message response = OnPost(message);
+            response.Write(conn);
+            break;
+        }
+        case Message::Type::GetRequest: {
+            Message response = OnGet(message);
+            response.Write(conn);
+            break;
+        }
+        default:
+            InvalidMessage(messageType);
+            clientAlived = false;
+            break;
+        }
+    }
+    cout<<"client disconnected:"<<conn->GegtHost()<<":"<<conn->GetPort()<<endl;
 }
