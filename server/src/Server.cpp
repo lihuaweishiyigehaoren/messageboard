@@ -27,8 +27,9 @@ void Server::start()
         while(!_toExit)
         {
             std::shared_ptr<TcpConnection> conn = _tcpServer.Accept();
-            cout<<"accept cliengt from:"<<conn->GegtHost()<<":"<<conn->GetPort()<<endl;
-        
+            cout<<"accept client from:"<<conn->GegtHost()<<":"<<conn->GetPort()<<endl;
+
+            
             // 一直等待客户端发送命令
             bool clientAlived = true;
             while(clientAlived)
@@ -49,13 +50,11 @@ void Server::start()
                 case Message::Type::PostRequest: {
                     Message response = OnPost(message);
                     response.Write(conn.get());
-
                     break;
                 }
                 case Message::Type::GetRequest: {
                     Message response = OnGet(message);
                     response.Write(conn.get());
-
                     break;
                 }
                 default:
