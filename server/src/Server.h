@@ -46,7 +46,7 @@ private:
     std::vector<PostMessage> _postmessages;
 
     // 存放连接的客户端
-    std::vector<shared_ptr<TcpConnection>> _clientConns;
+    // std::vector<shared_ptr<TcpConnection>> _clientConns;
 
 };
 

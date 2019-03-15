@@ -5,6 +5,8 @@
 */
 #include "Server.h"
 #include "SocketException.h"
+#include <sys/types.h>
+#include <unistd.h>
 
 
 Server::Server(const std::string& host,uint16_t port) :
@@ -31,12 +33,18 @@ void Server::start()
             std::shared_ptr<TcpConnection> conn = _tcpServer.Accept();
             cout<<"accept client from:"<<conn->GegtHost()<<":"<<conn->GetPort()<<endl;
 
-            _clientConns.push_back(conn);
-            for(shared_ptr<TcpConnection> conn : _clientConns)
+            // _clientConns.push_back(conn);
+            // for(shared_ptr<TcpConnection> conn : _clientConns)
+            // {
+            //     ProcessClientRequ(conn.get());
+            // }
+
+            pid_t pid = fork();
+            if(!pid)
             {
                 ProcessClientRequ(conn.get());
+                break;
             }
-            cout<<_toExit;
         }
     }
     catch(const SocketException& e)
