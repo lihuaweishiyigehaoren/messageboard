@@ -32,13 +32,7 @@ void Server::start()
         {
             std::shared_ptr<TcpConnection> conn = _tcpServer.Accept();
             cout<<"accept client from:"<<conn->GegtHost()<<":"<<conn->GetPort()<<endl;
-
-            // _clientConns.push_back(conn);
-            // for(shared_ptr<TcpConnection> conn : _clientConns)
-            // {
-            //     ProcessClientRequ(conn.get());
-            // }
-
+            
             pid_t pid = fork();
             if(!pid)
             {
